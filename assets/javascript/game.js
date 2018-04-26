@@ -1,21 +1,32 @@
 // declare variables
 var onePlayer = document.getElementById("1-player");
 var twoPlayer = document.getElementById("2-player");
+var wins = 0;
+var loss = 0;
+var currentLetterText = "";
 
-function play(word = pickedWord, hint = wordObj[pickedWord]){
-    var wins = 0;
-    var loss = 0;
+
+function play(word, hint){
+    var letterIndex = 0;
     var guessLetters = [];
+    var guessLettersC = [];
     var guessRemain = 12;
     var guessCorrect = 0;
+    var editUnderline = "";
+    var correctGuess = [];
+    var hasSpace = false;
     //set underline length for html
     var pickedWordUnderline = "";
     for (var i = 0; i < word.length; i++){
-       if(word.indexOf(" ") == i){
-           pickedWordUnderline += "     ";
+       if(word.split("")[i] == " "){
+           pickedWordUnderline += " -";
+           correctGuess[i] = " -"
+           guessCorrect++;
+           console.log(guessCorrect + " 24");
        }
        else{
            pickedWordUnderline += " _";
+           correctGuess[i] = " _";
        }
     } 
 
@@ -23,12 +34,12 @@ function play(word = pickedWord, hint = wordObj[pickedWord]){
     document.getElementById("wordGuess").innerHTML = 
     "<div class = \"col-lg-12\">"+
         "<div class = \"row\">" +
-            "<div class = \"col-lg-4 offset-lg-4\" id = \"myWord\">" +
-                "<h2 class = \"text-center underline\" >" + pickedWordUnderline + "</h2>" +
+            "<div class = \"col-lg-12\" id = \"myWord\">" +
+                "<h2 class = \"text-center underline\" id = \"underlineText\">" + pickedWordUnderline + "</h2>" +
             "</div>" + 
         "</div>" +
         "<div class = \"row\">" +
-            "<div class = \"col-lg-4\">" + 
+            "<div class = \"col-lg-4\" id = \"letterGuessDiv\">" + 
                 "<div class = \"row\">" +
                     "<div class = \"col-lg-12\">" +
                         "<h2 class = \"text-center\"> Letters Guessed: </h2>" + 
@@ -36,7 +47,7 @@ function play(word = pickedWord, hint = wordObj[pickedWord]){
                 "</div>" +
                 "<div class = \"row\">" +
                     "<div class = \"col-lg-12\">" +    
-                        "<span id = \"letterGuessed\" class = \"text-center\"> Press any letter key to start! </span>" +
+                        "<h2><span id = \"letterGuessed\" class = \"text-center\"> Press any letter key to start! </span></h2>" +
                     "</div>" +
                 "</div>" +
             "</div>" +
@@ -66,15 +77,77 @@ function play(word = pickedWord, hint = wordObj[pickedWord]){
         "</div>" +
     "</div>";
 
-    // set functions used in main
-    // function for checking if 
-    function checkChar(){
+    // add guessed letter to array of previous guesses
 
+    // funtion when guess is commited
+    function onGuess(guess){
+        var wordSplit = word.split("");
+        console.log(word.length + " line 84");
+
+
+        console.log("76 into func")
+        if(guessLetters.indexOf(guess) == -1 && guessLettersC.indexOf(guess) == -1){
+            if (word.indexOf(guess) != -1){
+                guessLettersC.push(guess);
+                console.log("90" + guessCorrect);
+                for(var i = 0; i < wordSplit.length; i++){
+                    if(guess == wordSplit[i]){
+                        correctGuess[i] = guess;
+                        guessCorrect++;
+                    }
+                }
+                pickedWordUnderline = "";
+                for(var i = 0; i < correctGuess.length; i++){
+                    pickedWordUnderline += " " + correctGuess[i];
+                }
+                console.log(pickedWordUnderline, word.indexOf(guess));
+                document.getElementById("underlineText").textContent = pickedWordUnderline;
+            }else {
+                console.log("80 in");
+                guessLetters.push(guess);
+                if(currentLetterText !== ""){
+                    console.log(guessLetters[letterIndex]);
+                    currentLetterText += " " + guessLetters[letterIndex];
+                }else{
+                    console.log(guessLetters[letterIndex] + letterIndex + "bing");                    
+                    currentLetterText = guessLetters[letterIndex];
+                }
+                if(guessRemain == 5){
+                    document.getElementById("hintHTML").innerHTML = 
+                    "<h2 class = \"hintText text-center\"> Hint: </h2> <br>" + hint;
+                }
+
+                letterIndex++;
+                console.log(currentLetterText);
+                document.getElementById("letterGuessed").textContent = currentLetterText;
+                guessRemain -= 1;
+                document.getElementById("remainText").textContent = guessRemain;
+            }
+            if(guessCorrect == word.length){
+                console.log("Win In 118");
+                wins++;
+                document.getElementById("hintHTML").innerHTML = 
+                "<h2 class = \"hintText text-center\"> Hint: </h2> <br>" + hint;
+                document.getElementById("letterGuessDiv").innerHTML = 
+                "<h2 class = \"congratsText\"> Congradulations You Win!!!! </h2>"+
+                "<h3> Play again? </h2>" +
+                "<div class=\"col-lg-2 offset-lg-4\">" +
+                    "<button type=\"button\" id= \"1-player\" class=\"btn btn-outline-dark\" onclick=\"\">1 Player</button>" +
+                "</div>" +
+                "<div class=\"col-lg-2\">" +
+                    "<button type=\"button\" id=\"2-player\" class=\"btn btn-outline-dark\">2 Player</button>" +
+                "</div>";
+                document.getElementById("winText").textContent = wins;
+                return wins;
+
+            }
+        }
     }
-    // function 
-            
+    
 
-
+    document.onkeyup = function myfunc(event){
+        onGuess(event.key);
+    }
 
 }
 // 1 player game

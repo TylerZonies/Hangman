@@ -3,10 +3,13 @@ var onePlayer = document.getElementById("1-player");
 var twoPlayer = document.getElementById("2-player");
 var wins = 0;
 var loss = 0;
-var currentLetterText = "";
+
+var imgSrc = document.getElementById("hangmanImg");
+
 
 
 function play(word, hint){
+    var currentLetterText = "";
     var letterIndex = 0;
     var guessLetters = [];
     var guessLettersC = [];
@@ -15,6 +18,7 @@ function play(word, hint){
     var editUnderline = "";
     var correctGuess = [];
     var hasSpace = false;
+    imgSrc.innerHTML = "<img src = \"assets/images/0.png\" alt = \"hanging man\" />";
     //set underline length for html
     var pickedWordUnderline = "";
     for (var i = 0; i < word.length; i++){
@@ -112,16 +116,47 @@ function play(word, hint){
                     console.log(guessLetters[letterIndex] + letterIndex + "bing");                    
                     currentLetterText = guessLetters[letterIndex];
                 }
-                if(guessRemain == 5){
-                    document.getElementById("hintHTML").innerHTML = 
-                    "<h2 class = \"hintText text-center\"> Hint: </h2> <br>" + hint;
-                }
+
 
                 letterIndex++;
                 console.log(currentLetterText);
                 document.getElementById("letterGuessed").textContent = currentLetterText;
-                guessRemain -= 1;
+                guessRemain--;
                 document.getElementById("remainText").textContent = guessRemain;
+            }
+            if(guessRemain == 5){
+                document.getElementById("hintHTML").innerHTML = 
+                "<h2 class = \"hintText text-center\"> Hint: </h2> <br>" + hint;
+            }
+            if(guessRemain == 10){
+                imgSrc.innerHTML = "<img src = \"assets/images/1.png\" alt = \"step one of hanging man\" />";
+            }else if(guessRemain == 8){
+                imgSrc.innerHTML = "<img src = \"assets/images/2.png\" alt = \"step 2 of hanging man\" />";
+            }else if(guessRemain == 6){
+                imgSrc.innerHTML = "<img src = \"assets/images/3.png\" alt = \"step 3 of hanging man\" />";
+            }else if(guessRemain == 4){
+                imgSrc.innerHTML = "<img src = \"assets/images/4.png\" alt = \"step 4 of hanging man\" />";
+            }else if(guessRemain == 2){
+                imgSrc.innerHTML = "<img src = \"assets/images/5.png\" alt = \"step 5 of hanging man\" />";
+            }else if(guessRemain == 0){
+                imgSrc.innerHTML = "<img src = \"assets/images/6.png\" alt = \"last step of hanging man\" />";
+                loss++;
+                document.getElementById("lossText").textContent = loss;
+                document.getElementById("underlineText").textContent = word;
+                document.getElementById("letterGuessDiv").innerHTML = 
+                "<h2 class = \"congratsText\"> Sorry you lose!! </h2>"+
+                "<h3> Play again? </h2>" +
+                "<div class=\"col-lg-2 offset-lg-4\">" +
+                    "<button type=\"button\" id= \"1-player2\" class=\"btn btn-outline-dark\" onclick=\"\">1 Player</button>" +
+                "</div>" +
+                "<div class=\"col-lg-2\">" +
+                    "<button type=\"button\" id=\"2-player2\" class=\"btn btn-outline-dark\">2 Player</button>" +
+                "</div>";
+                var onePlayer2 = document.getElementById("1-player2");
+                onePlayer2.onclick = function ply12(){
+                    console.log("does it.");
+                    play1();
+                }
             }
             if(guessCorrect == word.length){
                 console.log("Win In 118");
@@ -132,13 +167,18 @@ function play(word, hint){
                 "<h2 class = \"congratsText\"> Congradulations You Win!!!! </h2>"+
                 "<h3> Play again? </h2>" +
                 "<div class=\"col-lg-2 offset-lg-4\">" +
-                    "<button type=\"button\" id= \"1-player\" class=\"btn btn-outline-dark\" onclick=\"\">1 Player</button>" +
+                    "<button type=\"button\" id= \"1-player2\" class=\"btn btn-outline-dark\" onclick=\"\">1 Player</button>" +
                 "</div>" +
                 "<div class=\"col-lg-2\">" +
-                    "<button type=\"button\" id=\"2-player\" class=\"btn btn-outline-dark\">2 Player</button>" +
+                    "<button type=\"button\" id=\"2-player2\" class=\"btn btn-outline-dark\">2 Player</button>" +
                 "</div>";
                 document.getElementById("winText").textContent = wins;
-                return wins;
+                var onePlayer2 = document.getElementById("1-player2");
+                onePlayer2.onclick = function ply12(){
+                    console.log("does it.");
+                    play1();
+                }
+
 
             }
         }

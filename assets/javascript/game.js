@@ -164,7 +164,7 @@ function play(word, hint){
                 document.getElementById("hintHTML").innerHTML = 
                 "<h2 class = \"hintText text-center\"> Hint: </h2> <br>" + hint;
                 document.getElementById("letterGuessDiv").innerHTML = 
-                "<h2 class = \"congratsText\"> Congradulations You Win!!!! </h2>"+
+                "<h2 class = \"congratsText\"> Congratulations You Win!!!! </h2>"+
                 "<h3> Play again? </h2>" +
                 "<div class=\"col-lg-2 offset-lg-4\">" +
                     "<button type=\"button\" id= \"1-player2\" class=\"btn btn-outline-dark\" onclick=\"\">1 Player</button>" +
@@ -213,7 +213,10 @@ function play1(){
 }
 // 2 player game 
 function play2(){
+    word = prompt("Pick word for hangman");
+    hint = prompt("add hint");
 
+    play(word, hint);
 
 }
 onePlayer.onclick = function ply1(){
